@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block body %}
+<h1>Tell me about your day</h1>
+<form method="post">
+<label>Your names</label><input name="names" required>
+<label>Email</label><input name="email" type="email" required>
+<label>Wedding date (if known)</label><input name="wedding_date" type="date">
+<label>Guests (roughly)</label><input name="guests" type="number" min="1">
+<label>Tradition</label>
+<select name="tradition"><option>Islamic</option><option>Christian</option><option>Civil</option><option>Humanist</option><option>Other, tell me more</option></select>
+<label>Budget</label><input name="budget" placeholder="e.g. £15,000">
+<label>Anything else?</label><textarea name="notes" rows="4"></textarea>
+<button>Send</button></form>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block body %}
+<h1>Approval queue</h1>
+{% for r in rows %}<div class="card"><b>{{ r.summary }}</b> <small>({{ r.kind }}, {{ r.status }})</small>
+<p>{{ r.draft }}</p>
+{% if r.status == 'pending' %}
+<form method="post" action="/admin/queue/{{ r.id }}/approved" style="display:inline"><button>Approve</button></form>
+<form method="post" action="/admin/queue/{{ r.id }}/rejected" style="display:inline"><button style="background:#555">Reject</button></form>
+{% endif %}</div>{% else %}<p>Nothing waiting.</p>{% endfor %}
+{% endblock %}
