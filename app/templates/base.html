@@ -1,12 +1,13 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Fine Thread Weddings</title>
-<style>
-:root{--putty:#C9C8BA;--ink:#000;--gold:#A87A2A}
-body{margin:0;background:var(--putty);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif}
-main{max-width:640px;margin:0 auto;padding:32px 20px}
-h1{font:400 40px/1.1 Georgia,serif;text-transform:uppercase}
-label{display:block;margin:14px 0 4px;font-size:13px;letter-spacing:.04em}
-input,select,textarea{width:100%;box-sizing:border-box;padding:10px;border:1px solid #000;border-radius:9px;background:#fff;font:inherit}
-button,.pill{display:inline-block;background:#000;color:#fff;border:0;border-radius:999px;padding:12px 24px;font:inherit;text-decoration:none;cursor:pointer;margin-top:20px}
-.card{background:#fff;border-radius:9px;padding:16px;margin:12px 0}
-</style></head><body><main>{% block body %}{% endblock %}</main></body></html>
+<title>{% block title %}Fine Thread Weddings{% endblock %}</title>
+<meta name="description" content="A coordinator for every wedding. Needle, our AI assistant, drafts the plan. Amir, a real person, checks everything.">
+<link rel="icon" href="{{ url_for('static', filename='img/mark.svg') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='site.css') }}">
+</head><body>
+{% block page %}
+<div class="wrap"><nav><a class="logo" href="/"><img src="{{ url_for('static', filename='img/mark.svg') }}" alt="">Fine Thread</a><a class="lab" href="/enquire">Enquire</a></nav></div>
+<div class="form">{% block body %}{% endblock %}</div>
+{% endblock %}
+</body></html>

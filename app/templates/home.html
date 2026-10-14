@@ -1,6 +1,83 @@
-{% extends "base.html" %}{% block body %}
-<h1>A coordinator <i>for</i> every wedding</h1>
-<p>Plans from £100 · Day-of from £450</p>
-<a class="pill" href="/enquire">Tell me about your day</a>
-<p style="margin-top:40px;font-size:13px">Placeholder page. The full design is in <code>design/boards</code>.</p>
+{% extends "base.html" %}
+{% block page %}
+<header class="hero">
+ <div class="wrap"><nav><a class="logo" href="/"><img src="{{ img('mark.svg') }}" alt="">Fine Thread</a><a class="lab" href="/enquire">Enquire</a></nav></div>
+ <div class="wrap top">
+  <h1>A coordinator <i>for</i> every wedding</h1>
+  <div class="stats"><span>Plans from £100</span><span>Day-of from £450</span></div>
+  <a class="pill" href="/enquire">Tell me about your day</a>
+ </div>
+ <div class="word" aria-hidden="true">Fine Thread</div>
+ <svg class="thread" viewBox="0 0 1000 400" preserveAspectRatio="none" fill="none" aria-hidden="true"><path d="M900 20C820 100 700 180 500 160S200 120 -10 200" stroke="#A07424" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linecap="round"/></svg>
+ <img class="needle" src="{{ img('needle-wave.svg') }}" alt="Needle, our AI planning assistant, waving">
+</header>
+
+<section class="panel" aria-label="Example run sheet">
+ <div class="run">
+  <div style="display:flex;justify-content:space-between"><span class="lab">The plan</span><span class="lab" style="border:1px solid #666;border-radius:999px;padding:3px 12px">Example</span></div>
+  <h3>Run sheet</h3>
+  <div class="row"><b>13:30</b>Ceremony begins</div><div class="row"><b>14:15</b>Photographs</div><div class="row"><b>15:30</b>Reception and meal</div>
+  <small>Prepared by Needle · Checked by Amir</small>
+ </div>
+</section>
+
+<section class="band ink" id="traditions"><div class="wrap">
+ <div class="sechead lab"><span>Traditions</span><span>Same prices</span></div>
+ <h2 class="big">Every tradition</h2>
+ <div class="three">
+  <div><h3>Islamic</h3><div class="circle" style="background-image:url({{ img('c1.jpg') }})"></div><div class="hex"><i></i><i class="o"></i><i class="o"></i></div><p>Nikah, walima, prayer times, halal catering, family seating.</p></div>
+  <div><h3>Christian</h3><div class="circle" style="background-image:url({{ img('c2.jpg') }})"></div><div class="hex"><i class="o"></i><i></i><i class="o"></i></div><p>Church or chapel service, banns, readings, hymns, reception.</p></div>
+  <div><h3>Civil, humanist and more</h3><div class="circle" style="background-image:url({{ img('c3.jpg') }})"></div><div class="hex"><i class="o"></i><i class="o"></i><i></i></div><p>Whatever your day looks like, we build it with you. Same prices for every tradition.</p></div>
+ </div>
+</div></section>
+
+<section class="band" id="how"><div class="wrap">
+ <div class="sechead lab"><span>How it works</span><span>Three steps</span></div>
+ <h2 class="big">What happens next</h2>
+ <div class="steps">
+  <div class="card"><div class="n">1</div><h3>Tell me about your day</h3><p>A few questions on date, guests, budget and traditions.</p></div>
+  <div class="card"><div class="n">2</div><h3>Needle drafts, Amir checks</h3><p>Needle builds your budget, vendor shortlist and run sheet. Amir reviews everything before you see it.</p></div>
+  <div class="card"><div class="n">3</div><h3>You approve</h3><p>Nothing is booked, paid or signed without you and Amir.</p></div>
+ </div>
+</div></section>
+
+<section class="band bone"><div class="wrap">
+ <div class="sechead lab"><span>The team</span><span>Two pairs of hands</span></div>
+ <h2 class="big">Two pairs of hands</h2>
+ <div class="two">
+  <div class="who"><img src="{{ img('needle-work.svg') }}" alt="Needle"><div><span class="lab">AI assistant</span><h3>Needle</h3><ul><li>Budgets, timelines and checklists</li><li>Vendor emails and reminders</li><li>Never takes payment or signs anything</li></ul></div></div>
+  <div class="who"><div style="width:90px;height:90px;border-radius:50%;background:#000;flex:none"></div><div><span class="lab">Real person</span><h3>Amir</h3><ul><li>Reviews every plan before you see it</li><li>Speaks to vendors</li><li>With you on the day</li></ul></div></div>
+ </div>
+</div></section>
+
+<section class="band chalk" id="prices"><div class="wrap">
+ <div class="sechead lab"><span>Prices</span><span>Fixed quote first</span></div>
+ <h2 class="big">Prices</h2>
+ <div class="prices">
+  <div class="card"><span class="lab">Planning kit</span><div class="amt">£100–£200</div><p>Your budget, timeline and checklists, ready to use yourself.</p></div>
+  <div class="card"><span class="lab">Day-of</span><div class="amt">from £450</div><p>Amir runs your day, from setup to pack-down.</p></div>
+  <div class="card hi"><span class="tag">MOST CHOSEN</span><span class="lab">Month-of</span><div class="amt">from £600</div><p>We step in a month before and finalise every detail.</p></div>
+  <div class="card"><span class="lab">Partial planning</span><div class="amt">from £900</div><p>Help filling the gaps once the big bookings are made.</p></div>
+ </div>
+ <p class="note">Prices are a guide. You get a fixed quote before you pay anything.</p>
+</div></section>
+
+<section class="band" id="faq"><div class="wrap" style="max-width:900px">
+ <div class="sechead lab"><span>Questions</span><span>Straight answers</span></div>
+ <h2 class="big">Questions</h2>
+ <details><summary>Who actually plans my wedding?</summary><p>Needle, our AI assistant, does the admin and drafting. Amir, a real person, reviews everything and is with you on the day.</p></details>
+ <details><summary>Can Needle spend my money or sign contracts?</summary><p>No. Payments and signatures always need you and Amir to approve first.</p></details>
+ <details><summary>Do you cover my tradition?</summary><p>Islamic and Christian weddings have ready-made templates. Others are built with you at no extra cost.</p></details>
+ <details><summary>What if I only need help on the day?</summary><p>Choose day-of or month-of coordination.</p></details>
+ <details><summary>What does it cost to cancel or change my date?</summary><p>We are finalising our deposit and cancellation terms and will share them before you pay anything.</p></details>
+ <details><summary>Where do you work?</summary><p>We are starting in London. Tell us where your day is and we will say whether we can cover it.</p></details>
+</div></section>
+
+<section class="band cta"><div class="wrap">
+ <img src="{{ img('needle-cheer.svg') }}" alt="">
+ <h2 class="big" style="margin-bottom:24px">Tell me about your day</h2>
+ <a class="pill" href="/enquire">Start here</a>
+</div></section>
+
+<footer><div class="wrap"><span>© Fine Thread Weddings</span><span>Planning guidance, not legal advice. For marriage law, see <a href="https://www.gov.uk/marriages-civil-partnerships">GOV.UK</a>.</span></div></footer>
 {% endblock %}

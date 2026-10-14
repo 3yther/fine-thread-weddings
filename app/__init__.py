@@ -23,6 +23,10 @@ def create_app():
             g.db.executescript(SCHEMA)
         return g.db
 
+    @app.template_global()
+    def img(f):
+        return url_for('static', filename='img/' + f)
+
     @app.teardown_appcontext
     def close(_):
         d = g.pop("db", None)

@@ -15,9 +15,9 @@ flask --app app run --debug
 Open http://127.0.0.1:5000. Data lives in `instance/ftw.db` (SQLite for now; PostgreSQL when deployed).
 
 ## Layout
-- `app/` Flask app (intake form, approval queue)
+- `app/` Flask app: responsive homepage, enquiry form, approval queue
 - `docs/copy-deck.md` page copy, FAQ and items still to confirm
-- `design/` logo SVGs and the Structured-style homepage boards (`.dc.html`)
+- `design/` logo SVGs (arch mark) and the original design boards (`.dc.html`)
 
 ## Not legal advice
 We point couples to GOV.UK for marriage law.
