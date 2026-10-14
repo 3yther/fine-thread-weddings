@@ -12,7 +12,13 @@ pip install -r requirements.txt
 flask --app app run --debug
 ```
 
-Open http://127.0.0.1:5000. Data lives in `instance/ftw.db` (SQLite for now; PostgreSQL when deployed).
+Set the admin password once (stored as a hash in `instance/admin.json`):
+
+```bash
+flask --app app set-password
+```
+
+Open http://127.0.0.1:5000. The approval queue is at http://127.0.0.1:5000/admin/queue and needs that password. Data lives in `instance/ftw.db` (SQLite for now; PostgreSQL when deployed).
 
 ## Layout
 - `app/` Flask app: responsive homepage, enquiry form, approval queue
@@ -21,3 +27,8 @@ Open http://127.0.0.1:5000. Data lives in `instance/ftw.db` (SQLite for now; Pos
 
 ## Not legal advice
 We point couples to GOV.UK for marriage law.
+
+## Security notes
+- Admin pages need login; sessions last 8 hours; 5 wrong passwords locks that IP for 5 minutes (in memory, resets on restart).
+- All admin POSTs carry a CSRF token.
+- When hosted: set `SECRET_KEY`, `ADMIN_PASSWORD_HASH` and `FTW_HTTPS=1` as environment variables, serve over HTTPS, and add rate limiting at the proxy.

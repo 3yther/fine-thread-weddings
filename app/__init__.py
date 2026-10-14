@@ -1,5 +1,7 @@
-import os, sqlite3
-from flask import Flask, g, render_template, request, redirect, url_for
+import os, sqlite3, json, secrets, time, functools, getpass
+import click
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask import Flask, g, render_template, request, redirect, url_for, session, abort
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS enquiries (
@@ -16,6 +18,55 @@ def create_app():
     app = Flask(__name__, instance_relative_config=True)
     os.makedirs(app.instance_path, exist_ok=True)
     app.config["DB"] = os.path.join(app.instance_path, "ftw.db")
+    admin_file = os.path.join(app.instance_path, "admin.json")
+    key_file = os.path.join(app.instance_path, "secret_key")
+
+    # Secret key: env var in production, otherwise generated once and kept in instance/.
+    key = os.environ.get("SECRET_KEY")
+    if not key:
+        if not os.path.exists(key_file):
+            with open(key_file, "w") as f: f.write(secrets.token_hex(32))
+            os.chmod(key_file, 0o600)
+        key = open(key_file).read().strip()
+    app.config.update(SECRET_KEY=key, SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE="Lax",
+                      SESSION_COOKIE_SECURE=os.environ.get("FTW_HTTPS") == "1",
+                      PERMANENT_SESSION_LIFETIME=60 * 60 * 8)
+
+    def admin_hash():
+        if os.environ.get("ADMIN_PASSWORD_HASH"): return os.environ["ADMIN_PASSWORD_HASH"]
+        if os.path.exists(admin_file): return json.load(open(admin_file)).get("hash")
+        return None
+
+    def csrf_token():
+        if "csrf" not in session: session["csrf"] = secrets.token_hex(16)
+        return session["csrf"]
+    app.jinja_env.globals["csrf_token"] = csrf_token
+
+    @app.before_request
+    def check_csrf():
+        if request.method == "POST" and request.path.startswith("/admin"):
+            if not secrets.compare_digest(request.form.get("csrf", ""), session.get("csrf", "x")):
+                abort(400)
+
+    def admin_required(fn):
+        @functools.wraps(fn)
+        def wrapper(*a, **kw):
+            if not session.get("admin"):
+                return redirect(url_for("login", next=request.path))
+            return fn(*a, **kw)
+        return wrapper
+
+    @app.cli.command("set-password")
+    def set_password():
+        """Set the admin password (stored as a hash in instance/admin.json)."""
+        pw = getpass.getpass("New admin password (12+ characters): ")
+        if len(pw) < 12: raise click.ClickException("Use at least 12 characters.")
+        if pw != getpass.getpass("Repeat it: "): raise click.ClickException("Passwords did not match.")
+        with open(admin_file, "w") as f: json.dump({"hash": generate_password_hash(pw)}, f)
+        os.chmod(admin_file, 0o600)
+        click.echo("Saved.")
+
+    fails = {}
 
     def db():
         if "db" not in g:
@@ -56,12 +107,36 @@ def create_app():
     def thanks():
         return render_template("thanks.html")
 
+    @app.route("/admin/login", methods=["GET", "POST"])
+    def login():
+        h = admin_hash(); err = None
+        ip = request.remote_addr; n, until = fails.get(ip, (0, 0))
+        if request.method == "POST":
+            if time.time() < until:
+                err = "Too many attempts. Wait a few minutes."
+            elif not secrets.compare_digest(request.form.get("csrf", ""), session.get("csrf", "x")):
+                abort(400)
+            elif h and check_password_hash(h, request.form.get("password", "")):
+                fails.pop(ip, None); session.clear(); session["admin"] = True; session.permanent = True
+                nxt = request.args.get("next", "")
+                return redirect(nxt if nxt.startswith("/admin") else url_for("queue"))
+            else:
+                n += 1; fails[ip] = (n, time.time() + 300 if n >= 5 else 0)
+                err = "Wrong password."
+        return render_template("login.html", err=err, no_password=h is None)
+
+    @app.post("/admin/logout")
+    def logout():
+        session.clear(); return redirect(url_for("home"))
+
     @app.get("/admin/queue")
+    @admin_required
     def queue():
         rows = db().execute("SELECT * FROM approvals ORDER BY id DESC").fetchall()
         return render_template("queue.html", rows=rows)
 
     @app.post("/admin/queue/<int:i>/<action>")
+    @admin_required
     def decide(i, action):
         if action in ("approved", "rejected"):
             db().execute("UPDATE approvals SET status=? WHERE id=?", (action, i)); db().commit()
