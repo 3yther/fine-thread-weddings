@@ -48,6 +48,9 @@ section.band{padding:clamp(48px,7vw,96px) 0}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .who{background:#fff;border-radius:9px;padding:32px;display:flex;gap:24px;align-items:flex-start}
 .who img{width:90px;flex:none}
+.avatar{width:110px;height:110px;border-radius:50%;flex:none;background:#000 center/cover;position:relative}
+.avatar.ph{display:flex;align-items:center;justify-content:center;color:#fff;font:400 44px 'Cormorant Garamond',serif}
+.aitag{position:absolute;right:-4px;bottom:-4px;background:var(--gold);color:#fff;font:500 11px Inter;letter-spacing:.1em;padding:3px 9px;border-radius:999px}
 .who h3{font-size:34px;margin:0 0 8px}.who ul{margin:12px 0 0;padding-left:18px;color:var(--graph)}
 .prices{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
 .prices .card{display:flex;flex-direction:column;gap:10px;position:relative}

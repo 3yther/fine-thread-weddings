@@ -76,6 +76,10 @@ def create_app():
         return g.db
 
     @app.template_global()
+    def has_img(f):
+        return os.path.exists(os.path.join(app.static_folder, 'img', f))
+
+    @app.template_global()
     def img(f):
         return url_for('static', filename='img/' + f)
 

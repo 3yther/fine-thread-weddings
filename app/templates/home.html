@@ -45,8 +45,9 @@
  <div class="sechead lab"><span>The team</span><span>Two pairs of hands</span></div>
  <h2 class="big">Two pairs of hands</h2>
  <div class="two">
-  <div class="who"><img src="{{ img('needle-work.svg') }}" alt="Needle"><div><span class="lab">AI assistant</span><h3>Needle</h3><ul><li>Budgets, timelines and checklists</li><li>Vendor emails and reminders</li><li>Never takes payment or signs anything</li></ul></div></div>
-  <div class="who"><div style="width:90px;height:90px;border-radius:50%;background:#000;flex:none"></div><div><span class="lab">Real person</span><h3>Amir</h3><ul><li>Reviews every plan before you see it</li><li>Speaks to vendors</li><li>With you on the day</li></ul></div></div>
+  <div class="who">{% if has_img('people/assistant.jpg') %}<div class="avatar" style="background-image:url({{ img('people/assistant.jpg') }})" role="img" aria-label="Needle, our AI assistant (AI-generated image)"><span class="aitag">AI</span></div>{% else %}<img src="{{ img('needle-work.svg') }}" alt="Needle">{% endif %}<div><span class="lab">AI assistant</span><h3>Needle</h3><ul><li>Budgets, timelines and checklists</li><li>Vendor emails and reminders</li><li>Never takes payment or signs anything</li></ul>{% if has_img('people/assistant.jpg') %}<p class="note">Needle is an AI assistant. The picture is AI-generated.</p>{% endif %}</div></div>
+  <div class="who">{% if has_img('people/amir.jpg') %}<div class="avatar" style="background-image:url({{ img('people/amir.jpg') }})" role="img" aria-label="Amir"></div>{% else %}<div class="avatar ph" aria-hidden="true">A</div>{% endif %}<div><span class="lab">Real person</span><h3>Amir</h3><ul><li>Reviews every plan before you see it</li><li>Speaks to vendors</li><li>With you on the day</li></ul></div></div>
+ </div>
  </div>
 </div></section>
 
