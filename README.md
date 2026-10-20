@@ -28,6 +28,9 @@ Open http://127.0.0.1:5000. The approval queue is at http://127.0.0.1:5000/admin
 ## Not legal advice
 We point couples to GOV.UK for marriage law.
 
+## Needle (AI drafts)
+Set `ANTHROPIC_API_KEY` to have Needle write the first reply to each enquiry with the Claude API (model via `FTW_MODEL`, default `claude-sonnet-5-5`). Without a key, or if the API fails, a fixed template draft is used. Drafts appear in the approval queue, where you can edit then approve or reject. Email sending is not connected yet.
+
 ## Security notes
 - Admin pages need login; sessions last 8 hours; 5 wrong passwords locks that IP for 5 minutes (in memory, resets on restart).
 - All admin POSTs carry a CSRF token.

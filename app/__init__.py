@@ -1,5 +1,6 @@
 import os, sqlite3, json, secrets, time, functools, getpass
 import click
+from .needle import draft_welcome
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, g, render_template, request, redirect, url_for, session, abort
 
@@ -95,10 +96,11 @@ def create_app():
                 "INSERT INTO enquiries(names,email,wedding_date,guests,tradition,budget,notes) VALUES(?,?,?,?,?,?,?)",
                 (f.get("names"), f.get("email"), f.get("wedding_date"), f.get("guests") or None,
                  f.get("tradition"), f.get("budget"), f.get("notes")))
-            # Needle's first draft goes to the queue; nothing is sent to the couple until Amir approves.
+            # Needle drafts the reply; nothing reaches the couple until Amir approves it.
+            e = {k: f.get(k) for k in ("names", "email", "wedding_date", "guests", "tradition", "budget", "notes")}
+            text, source = draft_welcome(e)
             db().execute("INSERT INTO approvals(enquiry_id,kind,summary,draft) VALUES(?,?,?,?)",
-                (cur.lastrowid, "welcome_email", f"Welcome email to {f.get('names')}",
-                 "Draft pending: Needle will write this once the Claude API is connected."))
+                (cur.lastrowid, "welcome_email:" + source, f"Welcome email to {e['names']} ({e['email']})", text))
             db().commit()
             return redirect(url_for("thanks"))
         return render_template("enquire.html")
@@ -139,7 +141,10 @@ def create_app():
     @admin_required
     def decide(i, action):
         if action in ("approved", "rejected"):
-            db().execute("UPDATE approvals SET status=? WHERE id=?", (action, i)); db().commit()
+            draft = request.form.get("draft")
+            if draft is not None:
+                db().execute("UPDATE approvals SET draft=? WHERE id=? AND status='pending'", (draft, i))
+            db().execute("UPDATE approvals SET status=? WHERE id=? AND status='pending'", (action, i)); db().commit()
         return redirect(url_for("queue"))
 
     return app
