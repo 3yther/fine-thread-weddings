@@ -100,7 +100,7 @@ def create_app():
                 "INSERT INTO enquiries(names,email,wedding_date,guests,tradition,budget,notes) VALUES(?,?,?,?,?,?,?)",
                 (f.get("names"), f.get("email"), f.get("wedding_date"), f.get("guests") or None,
                  f.get("tradition"), f.get("budget"), f.get("notes")))
-            # Needle drafts the reply; nothing reaches the couple until Amir approves it.
+            # Susan drafts the reply; nothing reaches the couple until Amir approves it.
             e = {k: f.get(k) for k in ("names", "email", "wedding_date", "guests", "tradition", "budget", "notes")}
             text, source = draft_welcome(e)
             db().execute("INSERT INTO approvals(enquiry_id,kind,summary,draft) VALUES(?,?,?,?)",

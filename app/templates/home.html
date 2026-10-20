@@ -9,7 +9,6 @@
  </div>
  <div class="word" aria-hidden="true">Fine Thread</div>
  <svg class="thread" viewBox="0 0 1000 400" preserveAspectRatio="none" fill="none" aria-hidden="true"><path d="M900 20C820 100 700 180 500 160S200 120 -10 200" stroke="#A07424" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linecap="round"/></svg>
- <img class="needle" src="{{ img('needle-wave.svg') }}" alt="Needle, our AI planning assistant, waving">
 </header>
 
 <section class="panel" aria-label="Example run sheet">
@@ -17,7 +16,7 @@
   <div style="display:flex;justify-content:space-between"><span class="lab">The plan</span><span class="lab" style="border:1px solid #666;border-radius:999px;padding:3px 12px">Example</span></div>
   <h3>Run sheet</h3>
   <div class="row"><b>13:30</b>Ceremony begins</div><div class="row"><b>14:15</b>Photographs</div><div class="row"><b>15:30</b>Reception and meal</div>
-  <small>Prepared by Needle · Checked by Amir</small>
+  <small>Prepared by Susan · Checked by Amir</small>
  </div>
 </section>
 
@@ -36,7 +35,7 @@
  <h2 class="big">What happens next</h2>
  <div class="steps">
   <div class="card"><div class="n">1</div><h3>Tell me about your day</h3><p>A few questions on date, guests, budget and traditions.</p></div>
-  <div class="card"><div class="n">2</div><h3>Needle drafts, Amir checks</h3><p>Needle builds your budget, vendor shortlist and run sheet. Amir reviews everything before you see it.</p></div>
+  <div class="card"><div class="n">2</div><h3>Susan drafts, Amir checks</h3><p>Susan builds your budget, vendor shortlist and run sheet. Amir reviews everything before you see it.</p></div>
   <div class="card"><div class="n">3</div><h3>You approve</h3><p>Nothing is booked, paid or signed without you and Amir.</p></div>
  </div>
 </div></section>
@@ -45,7 +44,7 @@
  <div class="sechead lab"><span>The team</span><span>Two pairs of hands</span></div>
  <h2 class="big">Two pairs of hands</h2>
  <div class="two">
-  <div class="who">{% if has_img('people/assistant.jpg') %}<div class="avatar" style="background-image:url({{ img('people/assistant.jpg') }})" role="img" aria-label="Needle, our AI assistant (AI-generated image)"><span class="aitag">AI</span></div>{% else %}<img src="{{ img('needle-work.svg') }}" alt="Needle">{% endif %}<div><span class="lab">AI assistant</span><h3>Needle</h3><ul><li>Budgets, timelines and checklists</li><li>Vendor emails and reminders</li><li>Never takes payment or signs anything</li></ul>{% if has_img('people/assistant.jpg') %}<p class="note">Needle is an AI assistant. The picture is AI-generated.</p>{% endif %}</div></div>
+  <div class="who">{% if has_img('people/assistant.jpg') %}<div class="avatar" style="background-image:url({{ img('people/assistant.jpg') }})" role="img" aria-label="Susan, our AI assistant (AI-generated image)"><span class="aitag">AI</span></div>{% else %}<img src="{{ img('needle-work.svg') }}" alt="Susan">{% endif %}<div><span class="lab">AI assistant</span><h3>Susan</h3><ul><li>Budgets, timelines and checklists</li><li>Vendor emails and reminders</li><li>Never takes payment or signs anything</li></ul>{% if has_img('people/assistant.jpg') %}<p class="note">Susan is an AI assistant. The picture is AI-generated.</p>{% endif %}</div></div>
   <div class="who">{% if has_img('people/amir.jpg') %}<div class="avatar" style="background-image:url({{ img('people/amir.jpg') }})" role="img" aria-label="Amir"></div>{% else %}<div class="avatar ph" aria-hidden="true">A</div>{% endif %}<div><span class="lab">Real person</span><h3>Amir</h3><ul><li>Reviews every plan before you see it</li><li>Speaks to vendors</li><li>With you on the day</li></ul></div></div>
  </div>
  </div>
@@ -66,8 +65,8 @@
 <section class="band" id="faq"><div class="wrap" style="max-width:900px">
  <div class="sechead lab"><span>Questions</span><span>Straight answers</span></div>
  <h2 class="big">Questions</h2>
- <details><summary>Who actually plans my wedding?</summary><p>Needle, our AI assistant, does the admin and drafting. Amir, a real person, reviews everything and is with you on the day.</p></details>
- <details><summary>Can Needle spend my money or sign contracts?</summary><p>No. Payments and signatures always need you and Amir to approve first.</p></details>
+ <details><summary>Who actually plans my wedding?</summary><p>Susan, our AI assistant, does the admin and drafting. Amir, a real person, reviews everything and is with you on the day.</p></details>
+ <details><summary>Can Susan spend my money or sign contracts?</summary><p>No. Payments and signatures always need you and Amir to approve first.</p></details>
  <details><summary>Do you cover my tradition?</summary><p>Islamic and Christian weddings have ready-made templates. Others are built with you at no extra cost.</p></details>
  <details><summary>What if I only need help on the day?</summary><p>Choose day-of or month-of coordination.</p></details>
  <details><summary>What does it cost to cancel or change my date?</summary><p>We are finalising our deposit and cancellation terms and will share them before you pay anything.</p></details>
@@ -75,7 +74,7 @@
 </div></section>
 
 <section class="band cta"><div class="wrap">
- <img src="{{ img('needle-cheer.svg') }}" alt="">
+ {% if has_img('people/assistant.jpg') %}<div class="avatar" style="background-image:url({{ img('people/assistant.jpg') }});margin:0 auto 20px" role="img" aria-label="Susan, our AI assistant (AI-generated image)"><span class="aitag">AI</span></div>{% else %}<img src="{{ img('needle-cheer.svg') }}" alt="">{% endif %}
  <h2 class="big" style="margin-bottom:24px">Tell me about your day</h2>
  <a class="pill" href="/enquire">Start here</a>
 </div></section>

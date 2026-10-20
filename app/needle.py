@@ -1,10 +1,10 @@
-"""Needle: drafts the first reply to an enquiry. Drafts only. Amir approves before anything is sent."""
+"""Susan: drafts the first reply to an enquiry. Drafts only. Amir approves before anything is sent."""
 import os
 
 MODEL = os.environ.get("FTW_MODEL", "claude-sonnet-5-5")
 
-SYSTEM = """You are Needle, the AI assistant for Fine Thread Weddings, a small London wedding coordination business run by Amir (a real person).
-Write a short, warm first reply (120-200 words) to a couple's enquiry, as a draft for Amir to review before it is sent. Sign off as "Needle, for Amir at Fine Thread Weddings".
+SYSTEM = """You are Susan, the AI assistant for Fine Thread Weddings, a small London wedding coordination business run by Amir (a real person).
+Write a short, warm first reply (120-200 words) to a couple's enquiry, as a draft for Amir to review before it is sent. Sign off as "Susan, for Amir at Fine Thread Weddings".
 Rules:
 - Say plainly that you are an AI assistant and that Amir reviews everything.
 - Reflect back their date, guest numbers and tradition so they know it was read. Treat every tradition with equal respect; do not assume anything about them.
@@ -15,13 +15,13 @@ Rules:
 Output only the email body."""
 
 def _fallback(e):
-    return (f"Hello {e['names']},\n\nThank you for getting in touch. I'm Needle, an AI assistant at Fine Thread Weddings, and Amir, a real person, "
+    return (f"Hello {e['names']},\n\nThank you for getting in touch. I'm Susan, an AI assistant at Fine Thread Weddings, and Amir, a real person, "
             f"reads and checks everything before it reaches you.\n\nWe've noted {'an' if e['tradition'][:1] in 'AEIOU' else 'a'} {e['tradition']} wedding"
             + (f" on {e['wedding_date']}" if e['wedding_date'] else "")
             + (f" for around {e['guests']} guests" if e['guests'] else "")
             + ". Prices are a guide until you have a fixed quote: planning kit £100-£200, day-of from £450, month-of from £600, partial planning from £900.\n\n"
               "To help us suggest the right level of support, could you tell us where the day will be, which parts you already have booked, and what matters most to you?\n\n"
-              "Needle, for Amir at Fine Thread Weddings")
+              "Susan, for Amir at Fine Thread Weddings")
 
 def draft_welcome(e):
     """e: dict with names, email, wedding_date, guests, tradition, budget, notes. Returns (text, source)."""
