@@ -31,6 +31,12 @@ We point couples to GOV.UK for marriage law.
 ## Susan (AI drafts)
 Set `ANTHROPIC_API_KEY` to have Susan write the first reply to each enquiry with the Claude API (model via `FTW_MODEL`, default `claude-sonnet-5-5`). Without a key, or if the API fails, a fixed template draft is used. Drafts appear in the approval queue, where you can edit then approve or reject. Email sending is not connected yet.
 
+## Couple accounts (invite only)
+1. Sign in as admin, open `/admin/enquiries`, click **Create invite link** for a couple and send them the link yourself.
+2. They open it, set a password (12+ characters) and land on `/plan`. The link works once and expires in 7 days.
+3. Add checklist items for them under **Checklist**. They can tick items off. Couples only ever see their own plan.
+4. They sign in later at `/login`.
+
 ## Security notes
 - Admin pages need login; sessions last 8 hours; 5 wrong passwords locks that IP for 5 minutes (in memory, resets on restart).
 - All admin POSTs carry a CSRF token.

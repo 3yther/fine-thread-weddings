@@ -1,5 +1,5 @@
 {% extends "base.html" %}{% block body %}
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><h1>Approval queue</h1><form method="post" action="/admin/logout"><input type="hidden" name="csrf" value="{{ csrf_token() }}"><button class="pill" style="background:#555;margin:0">Sign out</button></form></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><h1>Approval queue</h1><a class="lab" href="/admin/enquiries">Enquiries</a><form method="post" action="/admin/logout"><input type="hidden" name="csrf" value="{{ csrf_token() }}"><button class="pill" style="background:#555;margin:0">Sign out</button></form></div>
 {% for r in rows %}<div class="card"><b>{{ r.summary }}</b> <small>({{ r.kind }}, {{ r.status }})</small>
 {% if r.status == 'pending' %}
 <form method="post" action="/admin/queue/{{ r.id }}/approved">

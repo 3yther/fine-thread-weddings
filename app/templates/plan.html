@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block title %}Your plan · Fine Thread{% endblock %}{% block body %}
+<form method="post" action="/plan/logout" style="float:right"><input type="hidden" name="csrf" value="{{ csrf_token() }}"><button class="pill" style="background:#555;margin:0">Sign out</button></form>
+<h1 style="font-size:36px">{{ e.names }}</h1>
+<div class="card"><span class="lab">Your day</span><p style="margin:6px 0 0">{{ e.tradition }}{% if e.wedding_date %} · {{ e.wedding_date }}{% endif %}{% if e.guests %} · about {{ e.guests }} guests{% endif %}{% if e.budget %} · budget {{ e.budget }}{% endif %}</p></div>
+<h2 style="font-size:28px;margin:28px 0 8px">Checklist</h2>
+{% for t in tasks %}<form method="post" action="/plan/tasks/{{ t.id }}/toggle" class="card" style="display:flex;justify-content:space-between;align-items:center{% if t.done %};opacity:.6{% endif %}"><input type="hidden" name="csrf" value="{{ csrf_token() }}"><span>{{ t.title }}{% if t.due %} <small>· due {{ t.due }}</small>{% endif %}</span><button class="pill" style="margin:0;padding:8px 16px">{{ 'Undo' if t.done else 'Done' }}</button></form>
+{% else %}<p>Amir will add your first steps here soon.</p>{% endfor %}
+{% endblock %}

@@ -1,6 +1,7 @@
 import os, sqlite3, json, secrets, time, functools, getpass
 import click
 from .needle import draft_welcome
+from .couples import register_couples
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, g, render_template, request, redirect, url_for, session, abort
 
@@ -13,6 +14,13 @@ CREATE TABLE IF NOT EXISTS approvals (
   id INTEGER PRIMARY KEY, created TEXT DEFAULT CURRENT_TIMESTAMP,
   enquiry_id INTEGER, kind TEXT, summary TEXT, draft TEXT,
   status TEXT DEFAULT 'pending');
+CREATE TABLE IF NOT EXISTS couples (
+  id INTEGER PRIMARY KEY, created TEXT DEFAULT CURRENT_TIMESTAMP,
+  enquiry_id INTEGER UNIQUE, email TEXT UNIQUE, pw_hash TEXT,
+  invite_hash TEXT, invite_expires REAL);
+CREATE TABLE IF NOT EXISTS tasks (
+  id INTEGER PRIMARY KEY, created TEXT DEFAULT CURRENT_TIMESTAMP,
+  enquiry_id INTEGER, title TEXT, due TEXT, done INTEGER DEFAULT 0);
 """
 
 def create_app():
@@ -45,7 +53,7 @@ def create_app():
 
     @app.before_request
     def check_csrf():
-        if request.method == "POST" and request.path.startswith("/admin"):
+        if request.method == "POST" and request.path != "/enquire":
             if not secrets.compare_digest(request.form.get("csrf", ""), session.get("csrf", "x")):
                 abort(400)
 
@@ -151,4 +159,5 @@ def create_app():
             db().execute("UPDATE approvals SET status=? WHERE id=? AND status='pending'", (action, i)); db().commit()
         return redirect(url_for("queue"))
 
+    register_couples(app, db, admin_required, fails)
     return app

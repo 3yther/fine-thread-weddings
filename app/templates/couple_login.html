@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Sign in · Fine Thread{% endblock %}{% block body %}
+<h1 style="font-size:36px">Your plan</h1>
+<form method="post"><input type="hidden" name="csrf" value="{{ csrf_token() }}">
+<label>Email</label><input name="email" type="email" autocomplete="username" required>
+<label>Password</label><input name="password" type="password" autocomplete="current-password" required>
+{% if err %}<p role="alert" style="color:#8a1c1c">{{ err }}</p>{% endif %}<button class="pill">Sign in</button></form>{% endblock %}

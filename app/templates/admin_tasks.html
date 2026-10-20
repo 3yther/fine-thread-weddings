@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block body %}
+<p><a href="/admin/enquiries">&larr; Enquiries</a></p><h1>{{ e.names }}</h1>
+<form method="post" class="card"><input type="hidden" name="csrf" value="{{ csrf_token() }}">
+<label>Add a checklist item for the couple</label><input name="title" required maxlength="200"><label>Due date (optional)</label><input name="due" type="date"><button class="pill">Add</button></form>
+{% for t in tasks %}<div class="card"{% if t.done %} style="opacity:.6"{% endif %}>{{ '✓ ' if t.done }}{{ t.title }}{% if t.due %} <small>· due {{ t.due }}</small>{% endif %}</div>{% else %}<p>No items yet.</p>{% endfor %}
+{% endblock %}

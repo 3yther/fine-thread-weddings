@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Join · Fine Thread{% endblock %}{% block body %}
+{% if bad %}<h1 style="font-size:36px">Link not valid</h1><p>This invite link has expired or was already used. Ask Amir for a new one.</p>
+{% else %}<h1 style="font-size:36px">Create your password</h1><p>This gives you your own page with your plan and checklist.</p>
+<form method="post"><input type="hidden" name="csrf" value="{{ csrf_token() }}">
+<label>Password (12+ characters)</label><input name="password" type="password" autocomplete="new-password" required minlength="12">
+<label>Repeat it</label><input name="again" type="password" autocomplete="new-password" required>
+{% if err %}<p role="alert" style="color:#8a1c1c">{{ err }}</p>{% endif %}<button class="pill">Save and continue</button></form>{% endif %}{% endblock %}

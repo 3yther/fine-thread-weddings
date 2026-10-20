@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='site.css') }}">
 </head><body>
 {% block page %}
-<div class="wrap"><nav><a class="logo" href="/"><img src="{{ url_for('static', filename='img/mark.svg') }}" alt="">Fine Thread</a><a class="lab" href="/enquire">Enquire</a></nav></div>
+<div class="wrap"><nav><a class="logo" href="/"><img src="{{ url_for('static', filename='img/mark.svg') }}" alt="">Fine Thread</a><span style="display:flex;gap:24px"><a class="lab" href="/login">Sign in</a><a class="lab" href="/enquire">Enquire</a></span></nav></div>
 <div class="form">{% block body %}{% endblock %}</div>
 {% endblock %}
 </body></html>
