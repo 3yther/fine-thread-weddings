@@ -16,7 +16,7 @@ Output only the email body."""
 
 def _fallback(e):
     return (f"Hello {e['names']},\n\nThank you for getting in touch. I'm Needle, an AI assistant at Fine Thread Weddings, and Amir, a real person, "
-            f"reads and checks everything before it reaches you.\n\nWe've noted a {e['tradition']} wedding"
+            f"reads and checks everything before it reaches you.\n\nWe've noted {'an' if e['tradition'][:1] in 'AEIOU' else 'a'} {e['tradition']} wedding"
             + (f" on {e['wedding_date']}" if e['wedding_date'] else "")
             + (f" for around {e['guests']} guests" if e['guests'] else "")
             + ". Prices are a guide until you have a fixed quote: planning kit £100-£200, day-of from £450, month-of from £600, partial planning from £900.\n\n"
