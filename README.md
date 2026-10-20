@@ -29,7 +29,17 @@ Open http://127.0.0.1:5000. The approval queue is at http://127.0.0.1:5000/admin
 We point couples to GOV.UK for marriage law.
 
 ## Susan (AI drafts)
-Set `ANTHROPIC_API_KEY` to have Susan write the first reply to each enquiry with the Claude API (model via `FTW_MODEL`, default `claude-sonnet-5-5`). Without a key, or if the API fails, a fixed template draft is used. Drafts appear in the approval queue, where you can edit then approve or reject. Email sending is not connected yet.
+Set `ANTHROPIC_API_KEY` to have Susan write the first reply to each enquiry with the Claude API (model via `FTW_MODEL`, default `claude-sonnet-5-5`). Without a key, or if the API fails, a fixed template draft is used. Drafts appear in the approval queue, where you can edit then approve or reject.
+
+## Email
+Approving a welcome reply in the queue sends it to the couple, once. Rejecting sends nothing. Failed sends show an error with a **Retry sending** button. Invite links can also be emailed from the Enquiries page. Configure any SMTP account with environment variables before starting Flask:
+
+```bash
+export SMTP_HOST=smtp.gmail.com SMTP_PORT=587
+export SMTP_USER=you@gmail.com SMTP_PASSWORD='app-password'   # a Gmail App Password, not your normal one
+export MAIL_FROM=you@gmail.com MAIL_REPLY_TO=you@gmail.com
+```
+Without these, nothing is sent and the queue says so. Use a dedicated address on your own domain once you have one, so replies and deliverability are right.
 
 ## Couple accounts (invite only)
 1. Sign in as admin, open `/admin/enquiries`, click **Create invite link** for a couple and send them the link yourself.

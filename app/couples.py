@@ -1,6 +1,7 @@
 """Couple accounts: invite-only. Amir creates a one-time invite link; the couple sets a password and sees their plan."""
 import hashlib, secrets, time, functools
 from werkzeug.security import generate_password_hash, check_password_hash
+from .mailer import send_mail, configured
 from flask import render_template, request, redirect, url_for, session, abort
 
 INVITE_DAYS = 7
@@ -28,7 +29,7 @@ def register_couples(app, db, admin_required, fails):
         rows = db().execute("""SELECT e.*, c.id AS couple_id FROM enquiries e
                                LEFT JOIN couples c ON c.enquiry_id = e.id ORDER BY e.id DESC""").fetchall()
         link = session.pop("new_invite", None)
-        return render_template("enquiries.html", rows=rows, link=link)
+        return render_template("enquiries.html", rows=rows, link=link, note=session.pop("mail_note", None), mail_ok=configured())
 
     @app.post("/admin/enquiries/<int:i>/invite")
     @admin_required
@@ -42,7 +43,21 @@ def register_couples(app, db, admin_required, fails):
         db().execute("INSERT INTO couples(enquiry_id,email,invite_hash,invite_expires) VALUES(?,?,?,?)",
                      (i, e["email"].strip().lower(), _h(token), time.time() + INVITE_DAYS * 86400))
         db().commit()
-        session["new_invite"] = {"names": e["names"], "url": request.host_url.rstrip("/") + url_for("join", token=token)}
+        session["new_invite"] = {"id": i, "names": e["names"], "url": request.host_url.rstrip("/") + url_for("join", token=token)}
+        return redirect(url_for("enquiries"))
+
+    @app.post("/admin/enquiries/<int:i>/invite/email")
+    @admin_required
+    def email_invite(i):
+        e = db().execute("SELECT * FROM enquiries WHERE id=?", (i,)).fetchone()
+        url = request.form.get("url", "")
+        if not e or not url.startswith(request.host_url + "join/"):
+            abort(400)
+        body = (f"Hello {e['names']},\n\nHere is your private link to set a password and see your plan and checklist:\n\n{url}\n\n"
+                "It works once and expires in 7 days. If you did not expect this email, you can ignore it.\n\n"
+                "Amir, Fine Thread Weddings")
+        ok, err = send_mail(e["email"], "Your Fine Thread Weddings plan", body)
+        session["mail_note"] = f"Invite emailed to {e['email']}." if ok else err
         return redirect(url_for("enquiries"))
 
     @app.post("/admin/enquiries/<int:i>/tasks")

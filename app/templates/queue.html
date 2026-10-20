@@ -5,9 +5,10 @@
 <form method="post" action="/admin/queue/{{ r.id }}/approved">
 <input type="hidden" name="csrf" value="{{ csrf_token() }}">
 <textarea name="draft" rows="12" style="margin-top:10px">{{ r.draft }}</textarea>
-<p><small>Edit the draft if you like. Approving marks it ready; sending email is not connected yet.</small></p>
+<p><small>Edit the draft if you like. {% if mail_ok %}Approving sends it to the couple now.{% else %}Email is not set up, so approving will mark it as failed to send. See the README.{% endif %}</small></p>
 <button class="pill" style="margin-right:8px">Approve</button>
 <button class="pill" style="background:#555" formaction="/admin/queue/{{ r.id }}/rejected">Reject</button>
 </form>
-{% else %}<p style="white-space:pre-wrap">{{ r.draft }}</p>{% endif %}</div>{% else %}<p>Nothing waiting.</p>{% endfor %}
+{% else %}<p style="white-space:pre-wrap">{{ r.draft }}</p>
+{% if r.status == 'send_failed' %}<p role="alert" style="color:#8a1c1c">{{ r.error }}</p><form method="post" action="/admin/queue/{{ r.id }}/retry"><input type="hidden" name="csrf" value="{{ csrf_token() }}"><button class="pill">Retry sending</button></form>{% endif %}{% endif %}</div>{% else %}<p>Nothing waiting.</p>{% endfor %}
 {% endblock %}

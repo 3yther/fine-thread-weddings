@@ -2,6 +2,7 @@ import os, sqlite3, json, secrets, time, functools, getpass
 import click
 from .needle import draft_welcome
 from .couples import register_couples
+from .mailer import send_mail, configured as mail_configured
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, g, render_template, request, redirect, url_for, session, abort
 
@@ -13,7 +14,7 @@ CREATE TABLE IF NOT EXISTS enquiries (
 CREATE TABLE IF NOT EXISTS approvals (
   id INTEGER PRIMARY KEY, created TEXT DEFAULT CURRENT_TIMESTAMP,
   enquiry_id INTEGER, kind TEXT, summary TEXT, draft TEXT,
-  status TEXT DEFAULT 'pending');
+  status TEXT DEFAULT 'pending', error TEXT);
 CREATE TABLE IF NOT EXISTS couples (
   id INTEGER PRIMARY KEY, created TEXT DEFAULT CURRENT_TIMESTAMP,
   enquiry_id INTEGER UNIQUE, email TEXT UNIQUE, pw_hash TEXT,
@@ -81,6 +82,8 @@ def create_app():
         if "db" not in g:
             g.db = sqlite3.connect(app.config["DB"]); g.db.row_factory = sqlite3.Row
             g.db.executescript(SCHEMA)
+            cols = [r[1] for r in g.db.execute("PRAGMA table_info(approvals)")]
+            if "error" not in cols: g.db.execute("ALTER TABLE approvals ADD COLUMN error TEXT")
         return g.db
 
     @app.template_global()
@@ -147,17 +150,36 @@ def create_app():
     @admin_required
     def queue():
         rows = db().execute("SELECT * FROM approvals ORDER BY id DESC").fetchall()
-        return render_template("queue.html", rows=rows)
+        return render_template("queue.html", rows=rows, mail_ok=mail_configured())
 
     @app.post("/admin/queue/<int:i>/<action>")
     @admin_required
     def decide(i, action):
-        if action in ("approved", "rejected"):
+        if action in ("approved", "rejected", "retry"):
             draft = request.form.get("draft")
-            if draft is not None:
-                db().execute("UPDATE approvals SET draft=? WHERE id=? AND status='pending'", (draft, i))
-            db().execute("UPDATE approvals SET status=? WHERE id=? AND status='pending'", (action, i)); db().commit()
+            row = db().execute("SELECT * FROM approvals WHERE id=?", (i,)).fetchone()
+            if row and action == "retry" and row["status"] == "send_failed":
+                db().execute("UPDATE approvals SET status='approved' WHERE id=?", (i,)); row = dict(row, status="approved")
+            elif row and row["status"] == "pending":
+                if draft is not None:
+                    db().execute("UPDATE approvals SET draft=? WHERE id=?", (draft, i))
+                db().execute("UPDATE approvals SET status=? WHERE id=?", ("approved" if action == "approved" else "rejected", i))
+                row = db().execute("SELECT * FROM approvals WHERE id=?", (i,)).fetchone()
+            else:
+                row = None
+            # Approved welcome emails are sent exactly once, to the address on the enquiry.
+            if row and row["status"] == "approved" and row["kind"].startswith("welcome_email"):
+                e = db().execute("SELECT * FROM enquiries WHERE id=?", (row["enquiry_id"],)).fetchone()
+                ok, err = send_mail(e["email"], "Your wedding enquiry: Fine Thread Weddings", row["draft"])
+                db().execute("UPDATE approvals SET status=?, error=? WHERE id=?",
+                             ("sent" if ok else "send_failed", err, i))
+            db().commit()
         return redirect(url_for("queue"))
+
+    @app.get("/admin/status")
+    @admin_required
+    def status():
+        return {"email_configured": mail_configured()}
 
     register_couples(app, db, admin_required, fails)
     return app
